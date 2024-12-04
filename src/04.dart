@@ -3,13 +3,8 @@ import '../aoc_solver.dart';
 void main(List<String> _args) {
   final solver = A04()
     ..ignoreTests = false
-    ..doLogging = true;
+    ..doLogging = false;
   solver.main();
-  // print(solver._countXmasInWord('word'));
-  // print(solver._countXmasInWord('XMAS'));
-  // print(solver._countXmasInWord('XXMAS'));
-  // print(solver._countXmasInWord('XMASXMAS'));
-  // print(solver._countXmasInWord('XMXMAS'));
 }
 
 class A04 extends AOCSolver<List<List<String>>> {
@@ -78,65 +73,60 @@ class A04 extends AOCSolver<List<List<String>>> {
     return count.toString();
   }
 
-  // count XMASes without sharing letters
-  int _countXmasInWord(String word) {
-    final puzzles = <String>[];
-    for (final letter in word.split('')) {
-      if(letter == 'X') {
-        puzzles.add(letter);
-      } else if(letter == 'M') {
-        final i = puzzles.indexWhere((e) => e.endsWith('X'));
-        if (i >= 0) {
-          puzzles[i] += letter;
-        }
-      } else if(letter == 'A') {
-        final i = puzzles.indexWhere((e) => e.endsWith('M'));
-        if (i >= 0) {
-          puzzles[i] += letter;
-        }
-      } else if(letter == 'S') {
-        final i = puzzles.indexWhere((e) => e.endsWith('A'));
-        if (i >= 0) {
-          puzzles[i] += letter;
-        }
-      }
-    }
-
-    return puzzles.where((e) => e == 'XMAS').length;
-  }
-
   // Counts xmasses by the amount of xes, allowing letter sharing
-  int _countXmasInWordOld(String word) {
-    // State goes to 1 for x, 2 for m, 3>a for highest letter seen in order
-    int state = 0;
-    int leadingXCount = 0;
-    int? recursedXmases = null;
-    for (int i = 0; i < word.length; i++) {
-      final letter = word[i];
-      if ((state == 0 || state == 1) && letter == 'X') {
-        leadingXCount += 1;
-        state = 1;
-      } else if (letter == 'X' && recursedXmases == null) {
-        recursedXmases = _countXmasInWord(word.substring(i - 1));
-      } else if ((state == 1 || state == 2) && letter == 'M') {
-        state = 2;
-      } else if ((state == 2 || state ==3) && letter == 'A') {
-        state = 3;
-      } else if ((state == 3 || state == 4) && letter == 'S') {
-        // No new xmass findable by this invocation
-        if (recursedXmases == null && i < (word.length - 3)) {
-          recursedXmases = _countXmasInWord(word.substring(i - 1));
-        }
-        return leadingXCount + (recursedXmases ?? 0);
-      }
+  int _countXmasInWord(String word) {
+    int count = 0;
+    int last = word.indexOf("XMAS", 0);
+    while(last >= 0) {
+      count++;
+      last = word.indexOf("XMAS", last + 1);
     }
-    return 0; // state 4 never reached
+    return count;
   }
 
   @override
   String computeB(List<List<String>> input) {
     // TODO: implement computeB
     throw UnimplementedError();
+  }
+
+  @override
+  String solveB(String input) {
+    int count = 0; 
+
+    final rows = input.split('\n');
+    final chars = rows.map((e) => e.split('')).toList();
+    for(int y = 1; y < rows.length - 1; y++) {
+      for(int x = 1; x < chars.first.length - 1; x++) {
+        if (chars[y][x] == 'A'
+          && chars[y-1][x-1] == 'M'
+          && chars[y+1][x-1] == 'M'
+          && chars[y-1][x+1] == 'S'
+          && chars[y+1][x+1] == 'S') {
+            count++;
+          }
+        else if (chars[y][x] == 'A'
+          && chars[y-1][x-1] == 'S'
+          && chars[y+1][x-1] == 'S'
+          && chars[y-1][x+1] == 'M'
+          && chars[y+1][x+1] == 'M') {
+            count++;
+          }  else if (chars[y][x] == 'A'
+          && chars[y-1][x-1] == 'M'
+          && chars[y+1][x-1] == 'S'
+          && chars[y-1][x+1] == 'M'
+          && chars[y+1][x+1] == 'S') {
+            count++;
+          } else if (chars[y][x] == 'A'
+          && chars[y-1][x-1] == 'S'
+          && chars[y+1][x-1] == 'M'
+          && chars[y-1][x+1] == 'S'
+          && chars[y+1][x+1] == 'M') {
+            count++;
+          }
+      }
+    }
+    return count.toString();
   }
 
 }
