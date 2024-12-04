@@ -15,8 +15,12 @@ abstract class AOCSolver<T> {
     //print('\\---------------------------------------------/');
   }
 
+  bool ignoreTests = false;
+
   /// Run KATs on tests and returns true on failure.
   bool test() {
+    if (ignoreTests) return false;
+
     bool failed = false;
 
     String res = solveA(katA.$1);
