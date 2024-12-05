@@ -11,7 +11,11 @@ abstract class AOCSolver<T> {
 
     print('[--------------- Solve puzzles ---------------]');
     print('  A: ${solveA(input)}');
-    print('  B: ${solveB(input)}');
+    try {
+      print('  B: ${solveB(input)}');
+    } on UnimplementedError {
+      print('  B: skipped (unimplemented)');
+    }
     //print('\\---------------------------------------------/');
   }
 
@@ -28,12 +32,17 @@ abstract class AOCSolver<T> {
       print('KAT A failed: expected ${katA.$2} but got $res');
       failed = true;
     } else print('  ✔️ KAT A passed');
-  
-    res = solveB(katB.$1);
-    if (res != katB.$2) {
-      print('KAT B failed: expected ${katB.$2} but got $res');
-      failed = true;
-    } else print('  ✔️ KAT B passed');
+
+    try {
+      res = solveB(katB.$1);
+      if (res != katB.$2) {
+        print('KAT B failed: expected ${katB.$2} but got $res');
+        failed = true;
+      } else print('  ✔️ KAT B passed');
+    } on UnimplementedError {
+      print('  ~ B: skipped (unimplemented)');
+    }
+    
 
     return failed;
   }
