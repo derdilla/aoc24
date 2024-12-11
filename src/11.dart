@@ -18,7 +18,7 @@ class A11 extends AOCSolver<String> {
   String computeA(String input) {
     List<String> sto = input.split(' ');
     List<String> nextSo = [];
-    for (int i = 0; i < 75; i++) {
+    for (int i = 0; i < 25; i++) {
       log(i);
       for (final s in sto) {
         if (int.parse(s) == 0) {
