@@ -55,12 +55,14 @@ class A14 extends AOCSolver<RobotArena> {
     for (int i = 0; i < 10000; i++)  {
       input.tick();
       if (i % 101 == 78) {
-      out += ('\ni$i\n');
-      out += input.debugPrintArena();}
-    }
+        // My the first few 100 of my data
+        // looked kinda periodic at that interval
+        out += ('\ni=$i\n');
+        out += input.debugPrintArena();}
+      }
     File('14b-2.out').writeAsStringSync(out);
      
-    return out;
+    return 'scroll to 6643 :3 (add one cause i is idx)';
   }
 }
 
