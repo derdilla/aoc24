@@ -205,7 +205,7 @@ class Warehouse {
     // and updates to connected boxes only happen through recursion.
     if(!_checkMovePossible(pos, dir)) return false;
     
-    // FIXME: offest here weird if (map[pos.$1][pos.$2] == Item.Empty) return true;
+    if (map[pos.$1][pos.$2] == Item.Empty) return true;
 
     if(!calledFromBlock && map[pos.$1][pos.$2] == Item.BigBoxL && (dir.$2 == 0)) {
       _moveWithBigBoxes((pos.$1, pos.$2 + 1), dir, true);
